@@ -10,3 +10,6 @@ from .dynamic_fee_transaction import (
 from .typed_transaction import (
     TypedTransaction,
 )
+from .set_code_transaction import (
+    SetCodeTransaction,
+)

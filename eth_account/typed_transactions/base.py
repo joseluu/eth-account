@@ -52,6 +52,7 @@ from eth_account._utils.validation import (
     LEGACY_TRANSACTION_FORMATTERS,
 )
 
+
 TYPED_TRANSACTION_FORMATTERS = merge(
     LEGACY_TRANSACTION_FORMATTERS,
     {
@@ -74,6 +75,23 @@ TYPED_TRANSACTION_FORMATTERS = merge(
         "maxFeePerGas": hexstr_if_str(to_int),
         "maxFeePerBlobGas": hexstr_if_str(to_int),
         "blobVersionedHashes": apply_formatter_to_array(hexstr_if_str(to_bytes)),
+        "authorisationList": apply_formatter_to_array(
+            apply_formatters_to_dict(
+                {
+                    "chainId": hexstr_if_str(to_int),
+                    "nonce": hexstr_if_str(to_int),
+                    "address": apply_one_of_formatters(
+                        (
+                            (is_string, hexstr_if_str(to_bytes)),
+                            (is_bytes, identity),
+                        )
+                    ),
+                    "yParity": hexstr_if_str(to_int),
+                    "signerR": hexstr_if_str(to_int),
+                    "signerS": hexstr_if_str(to_int),
+                }
+            ),
+        ),
     },
 )
 
