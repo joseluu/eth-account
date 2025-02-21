@@ -355,14 +355,14 @@ TEST_CASES = [
             "type": 4,
             "accessList": [],
             "chainId": 7072151312,
-            "authorisationList": [
+            "authorizationList": [
                 {
                     "chainId": "0x1a5887710",
                     "address": "0x3e6c95d880401e4e36ee62f4ebded346e1adf42d",
                     "nonce": "0x2",
                     "yParity": 1,
-                    "signerR": "0x31f464e6a607fc66e0f982a2d21498799b0571760a272f3d903aca6594cef595",  # noqa: E501
-                    "signerS": "0x343b0b143924a5db42a3200ae72d5c6dd03633847bc2da025cff5214e28708ec",  # noqa: E501
+                    "r": "0x31f464e6a607fc66e0f982a2d21498799b0571760a272f3d903aca6594cef595",  # noqa: E501
+                    "s": "0x343b0b143924a5db42a3200ae72d5c6dd03633847bc2da025cff5214e28708ec",  # noqa: E501
                 }
             ],
             "v": 1,
@@ -384,14 +384,14 @@ TEST_CASES = [
             "value": 0,
             "type": 4,
             "chainId": 7072151312,
-            "authorisationList": [
+            "authorizationList": [
                 {
                     "chainId": "0x1a5887710",
                     "address": "0x3e6c95d880401e4e36ee62f4ebded346e1adf42d",
                     "nonce": "0x2",
                     "yParity": 1,
-                    "signerR": "0x31f464e6a607fc66e0f982a2d21498799b0571760a272f3d903aca6594cef595",  # noqa: E501
-                    "signerS": "0x343b0b143924a5db42a3200ae72d5c6dd03633847bc2da025cff5214e28708ec",  # noqa: E501
+                    "r": "0x31f464e6a607fc66e0f982a2d21498799b0571760a272f3d903aca6594cef595",  # noqa: E501
+                    "s": "0x343b0b143924a5db42a3200ae72d5c6dd03633847bc2da025cff5214e28708ec",  # noqa: E501
                 }
             ],
             "accessList": (

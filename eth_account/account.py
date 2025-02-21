@@ -39,6 +39,9 @@ from eth_typing import (
     Hash32,
     HexStr,
 )
+from eth_utils import (
+    decode_hex,
+)
 from eth_utils.curried import (
     combomethod,
     hexstr_if_str,
@@ -93,7 +96,12 @@ from eth_account.signers.local import (
 from eth_account.typed_transactions import (
     TypedTransaction,
 )
+from eth_account.typed_transactions.set_code_transaction import(
+    AuthorizationRLP, 
+    SignedAuthorizationRLP
+)
 from eth_account.types import (
+    AuthorizationDictType,
     Blobs,
     Language,
     PrivateKeyType,
@@ -1043,3 +1051,39 @@ class Account(AccountLocalActions):
         )
         message_hash = _hash_eip191_message(signable_message)
         return cast(SignedMessage, self._sign_hash(message_hash, private_key))
+
+    @combomethod
+    def sign_authorization(
+        self,
+        authorization_dict: AuthorizationDictType,
+        private_key: PrivateKeyType,
+    ) -> AuthorizationDictType:
+        """
+        Sign an authorization  using a local private key.
+
+        It adds the signature fields to the authorization dict.
+
+        :param dict authorization_dict: the required keys are: chainId, address, nonce
+        :param private_key: the private key to sign the data with
+        :type private_key: hex str, bytes, int or :class:`eth_keys.datatypes.PrivateKey`
+        :returns: the dictionary with the signature fields added, suitable for inclusion in a EIP-7702 transaction
+        :rtype: AuthorizationDictType
+        """  # noqa: E501
+        if not isinstance(authorization_dict, Mapping):
+            raise TypeError(
+                f"authorization_dict must be dict-like, got {repr(authorization_dict)}"
+            )
+
+        authority_keys = keys.PrivateKey(decode_hex(private_key))
+
+        authorization_dict = dict(authorization_dict)  # make a copy to avoid mutating the input dict
+        sanitized_transaction = dissoc(authorization_dict, "yParity", "r", "s")
+
+        chain_id = authorization_dict["chainId"]
+        nonce = authorization_dict["nonce"]
+        code_address = authorization_dict["address"]
+        unsigned_authorization = AuthorizationRLP(chain_id, code_address ,nonce)
+        [v, r, s] = authority_keys.sign_msg_hash(unsigned_authorization.hash()).vrs 
+        signed_authorization  = SignedAuthorizationRLP(chain_id, code_address,nonce,v,r,s)
+        signed_authorization_dict = signed_authorization.as_dict()
+        return signed_authorization_dict

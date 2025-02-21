@@ -102,7 +102,7 @@ def is_rlp_structured_access_list(val: Any) -> bool:
     return True
 
 
-def is_rpc_structured_authorisation_list(val: Any) -> bool:
+def is_rpc_structured_authorization_list(val: Any) -> bool:
     """Returns true if 'val' is a valid JSON-RPC structured access list."""
     if not is_list_like(val):
         return False
@@ -117,8 +117,8 @@ def is_rpc_structured_authorisation_list(val: Any) -> bool:
         address = d.get("address")
         nonce = d.get("nonce")
         y_parity = d.get("yParity")
-        signer_r = d.get("signerR")
-        signer_s = d.get("signerS")
+        signer_r = d.get("r")
+        signer_s = d.get("s")
         if chain_id is None:
             return False
         if not is_int_or_prefixed_hexstr(chain_id):
@@ -144,7 +144,7 @@ def is_rpc_structured_authorisation_list(val: Any) -> bool:
     return True
 
 
-def is_rlp_structured_authorisation_list(val: Any) -> bool:
+def is_rlp_structured_authorization_list(val: Any) -> bool:
     """Returns true if 'val' is a valid rlp-structured access list."""
     if not is_list_like(val):
         return False

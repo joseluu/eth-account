@@ -120,16 +120,17 @@ class TypedTransaction:
             "SetCodeTransaction",
         ]
 
-        if encoded_transaction[0] == AccessListTransaction.transaction_type:
+        encoded_tx_type = encoded_transaction[0]
+        if encoded_tx_type == AccessListTransaction.transaction_type:
             transaction_type = AccessListTransaction.transaction_type
             transaction = AccessListTransaction.from_bytes(encoded_transaction)
-        elif encoded_transaction[0] == DynamicFeeTransaction.transaction_type:
+        elif encoded_tx_type == DynamicFeeTransaction.transaction_type:
             transaction_type = DynamicFeeTransaction.transaction_type
             transaction = DynamicFeeTransaction.from_bytes(encoded_transaction)
-        elif encoded_transaction[0] == BlobTransaction.transaction_type:
+        elif encoded_tx_type == BlobTransaction.transaction_type:
             transaction_type = BlobTransaction.transaction_type
             transaction = BlobTransaction.from_bytes(encoded_transaction)
-        elif encoded_transaction[0] == SetCodeTransaction.transaction_type:
+        elif encoded_tx_type == SetCodeTransaction.transaction_type:
             transaction_type = SetCodeTransaction.transaction_type
             transaction = SetCodeTransaction.from_bytes(encoded_transaction)
         else:

@@ -41,7 +41,7 @@ from eth_account._utils.validation import (
     LEGACY_TRANSACTION_VALID_VALUES,
     is_int_or_prefixed_hexstr,
     is_rpc_structured_access_list,
-    is_rpc_structured_authorisation_list,
+    is_rpc_structured_authorization_list,
 )
 from eth_account.types import (
     Blobs,
@@ -55,15 +55,15 @@ from .base import (
     _TypedTransactionImplementation,
 )
 
-authorisation_list_sede_type = CountableList(
+authorization_list_sede_type = CountableList(
     ListSedesClass(
         [
             big_endian_int,  # chainId
             Binary.fixed_length(20, allow_empty=False),  # codeSource address
             big_endian_int,  # nonce
             big_endian_int,  # yParity
-            big_endian_int,  # signerR
-            big_endian_int,  # signerS
+            big_endian_int,  # r
+            big_endian_int,  # s
         ]
     ),
 )
@@ -92,23 +92,23 @@ class AuthorizationRLP(HashableRLP):
         )
 
 
-class SignedAutorizationRLP(HashableRLP):
+class SignedAuthorizationRLP(HashableRLP):
     fields = (
         ("chainId", big_endian_int),
         ("address", Binary.fixed_length(20, allow_empty=False)),
         ("nonce", big_endian_int),
         ("yParity", big_endian_int),
-        ("signerR", big_endian_int),
-        ("signerS", big_endian_int),
+        ("r", big_endian_int),
+        ("s", big_endian_int),
     )
 
 
 class SetCodeTransaction(_TypedTransactionImplementation):
     """
-    Represents a dynamic fee transaction access per EIP-1559.
+    Represents a set code transaction as per EIP-7702.
     """
 
-    # This is the second transaction to implement the EIP-2718 typed transaction.
+    # This is the third transaction to implement the EIP-2718 typed transaction.
     transaction_type = 4  # '0x04'
 
     unsigned_transaction_fields = (
@@ -121,7 +121,7 @@ class SetCodeTransaction(_TypedTransactionImplementation):
         ("value", big_endian_int),
         ("data", binary),
         ("accessList", access_list_sede_type),
-        ("authorisationList", authorisation_list_sede_type),
+        ("authorizationList", authorization_list_sede_type),
     )
 
     signature_fields = (
@@ -137,7 +137,7 @@ class SetCodeTransaction(_TypedTransactionImplementation):
         "value": 0,
         "data": b"",
         "accessList": [],
-        "authorisationList": [],
+        "authorizationList": [],
     }
 
     _unsigned_transaction_serializer = type(
@@ -168,7 +168,7 @@ class SetCodeTransaction(_TypedTransactionImplementation):
                 "maxPriorityFeePerGas": is_int_or_prefixed_hexstr,
                 "maxFeePerGas": is_int_or_prefixed_hexstr,
                 "accessList": is_rpc_structured_access_list,
-                "authorisationList": is_rpc_structured_authorisation_list,
+                "authorizationList": is_rpc_structured_authorization_list,
             },
         )
 
@@ -197,7 +197,7 @@ class SetCodeTransaction(_TypedTransactionImplementation):
         Verifies that the dictionary is well formed.
         """
         if blobs is not None:
-            raise ValueError("Blob data is not supported for `DynamicFeeTransaction`.")
+            raise ValueError("Blob data is not supported for `SetCodeTransaction`.")
 
         # Validate fields.
         cls.assert_valid_fields(dictionary)
@@ -230,7 +230,7 @@ class SetCodeTransaction(_TypedTransactionImplementation):
             and encoded_transaction[0] == cls.transaction_type
         ):
             raise ValueError("unexpected input")
-        # Format is (0x01 || TransactionPayload)
+        # Format is (0x04 || TransactionPayload)
         # We strip the prefix, and RLP unmarshal the payload into our
         # signed transaction serializer.
         transaction_payload = encoded_transaction[1:]
@@ -250,10 +250,10 @@ class SetCodeTransaction(_TypedTransactionImplementation):
 
     def hash(self) -> bytes:
         """
-        Hashes this AccessListTransaction to prepare it for signing.
+        Hashes this SetCodeTransaction to prepare it for signing.
         As per the EIP-2930 specifications, the signature is a secp256k1 signature over
         ``keccak256(0x01 || rlp([chainId, nonce, gasPrice, gasLimit,
-        to, value, data, accessList])).``
+        to, value, data, accessList, authorisationList])).``
         """
         # Remove signature fields.
         transaction_without_signature_fields = dissoc(self.dictionary, "v", "r", "s")

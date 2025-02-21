@@ -74,7 +74,7 @@ TYPED_TRANSACTION_FORMATTERS = merge(
         "maxFeePerGas": hexstr_if_str(to_int),
         "maxFeePerBlobGas": hexstr_if_str(to_int),
         "blobVersionedHashes": apply_formatter_to_array(hexstr_if_str(to_bytes)),
-        "authorisationList": apply_formatter_to_array(
+        "authorizationList": apply_formatter_to_array(
             apply_formatters_to_dict(
                 {
                     "chainId": hexstr_if_str(to_int),
@@ -86,8 +86,8 @@ TYPED_TRANSACTION_FORMATTERS = merge(
                         )
                     ),
                     "yParity": hexstr_if_str(to_int),
-                    "signerR": hexstr_if_str(to_int),
-                    "signerS": hexstr_if_str(to_int),
+                    "r": hexstr_if_str(to_int),
+                    "s": hexstr_if_str(to_int),
                 }
             ),
         ),
