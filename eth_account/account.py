@@ -1056,7 +1056,7 @@ class Account(AccountLocalActions):
         private_key: PrivateKeyType,
     ) -> AuthorizationDictType:
         r"""
-        Sign an authorization  using a local private key.
+        Sign an authorization  using a local private key to be included in a EIP-7702 transaction.
         It adds the signature fields to the authorization dict.
 
         :param dict authorization_dict: the required keys are: chainId, address, nonce
@@ -1065,44 +1065,42 @@ class Account(AccountLocalActions):
         :returns: the dictionary with the signature fields added, suitable for inclusion in a EIP-7702 transaction
         :rtype: AuthorizationDictType
 
-        usage:
         You need to get signed one or more signed authorizations from an EOA willing to have a smart contract code associated with the EOA, this the essence of EIP-7702
         an authorization is of this form:
 
-        {'chainId': 7072151312,
-        'address':  b'>l\x95\xd8\x80@\x1eN6\xeeb\xf4\xeb\xde\xd3F\xe1\xad\xf4-',
-        'nonce': 2,
-        'yParity': 1,
-        'r': 22595136657293516951860802422974352017713294017347016159649668416801694741909,
-        's': 23624588567578401597292901415360791985725988995245670164012927046435484403948}
+        .. doctest:: python
 
-        where:
+            >>> code_address = '0x5ce9454909639D2D17A3F753ce7d93fa0b9aB12E'
+            >>> signer_EOA_private_key = "0xb25c7db31feed9122727bf0939dc769a96564b2de4c4726d035b36ecf1e5b364"
+            >>> signer_EOA_address = Account.from_key(signer_EOA_private_key).address
+            >>> nonce = w3.eth.get_transaction_count(code_address)
+            >>> authorization_to_sign = {'chainId': 7072151312,
+                        'address':  bytes.fromhex(code_address[2:],
+                        'nonce': nonce}
+            >>> my_auth1 = Account.sign_authorization(authorization_to_sign, signer_EOA_private_key)
+            >>> my_auth1
+            {'chainId': 7072151312,
+             'address': b'\\\xe9EI\tc\x9d-\x17\xa3\xf7S\xce}\x93\xfa\x0b\x9a\xb1.',
+             'nonce': 0,
+             'yParity': 0,
+             'r': 100888818593976975127029069136432183996023174646240393744022637628800244730652,
+             's': 17383471040173889700247006932658923008999125929610946821971349508861021723564}
+
+        .. _EIP-7702: https://eips.ethereum.org/EIPS/eip-7702
+
+        in the variable authorization_to_sign:
+        - chainId is the chain id of the chain where the EOA is located or 0 if the authorization is for all chains
         - address is the address of the smart contract code to be associated with the EOA, the address format is bytes
         - nonce is the nonce of the EOA, it is used to prevent replay attacks
-        the rest of the fields are the signature of the first 3 fields by the EOA
+        once signed, the fields are the signature of the first 3 fields by the EOA
 
-        Create the transaction as before, adding a new field named authorizationList, for instance:
+        to create a transaction that associates the code with the EOA, you need to create a transaction with the authorizationList field, this field is a list of signed authorizations, one for each EOA willing to have the code associated with it
 
-        transaction_dict = {'authorizationList':[my_auth1, my_auth2], "to": some_address}
+        .. doctest:: python
 
+            >>> transaction_dict = {'authorizationList':[my_auth1, my_auth2], "to": some_address}
 
-        assuming you yave variables named:
-        signer_EOA_private_key
-        code_address
-        and an instanciated web3 object named w3
-
-        code to sign the authorization:
-
-
-        chain_id = w3.eth.chain_id
-        signer_nonce = w3.eth.get_transaction_count(signer_EOA_address)
-        w3.eth.account.sign_authorization(
-                    {'chainId': chain_id,
-                    'address': bytes.fromhex(code_address[2:]),
-                    'nonce': signer_nonce },
-                    signer_EOA_private_key)
-
-
+        ..
         """  # noqa: E501
         if not isinstance(authorization_dict, Mapping):
             raise TypeError(
