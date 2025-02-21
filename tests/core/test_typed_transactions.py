@@ -362,7 +362,7 @@ TEST_CASES = [
                     "nonce": "0x2",
                     "yParity": 1,
                     "signerR": "0x31f464e6a607fc66e0f982a2d21498799b0571760a272f3d903aca6594cef595",
-                    "signerS": "0x343b0b143924a5db42a3200ae72d5c6dd03633847bc2da025cff5214e28708ec"
+                    "signerS": "0x343b0b143924a5db42a3200ae72d5c6dd03633847bc2da025cff5214e28708ec",
                 }
             ],
             "v": 1,
@@ -392,7 +392,7 @@ TEST_CASES = [
                     "nonce": "0x2",
                     "yParity": 1,
                     "signerR": "0x31f464e6a607fc66e0f982a2d21498799b0571760a272f3d903aca6594cef595",
-                    "signerS": "0x343b0b143924a5db42a3200ae72d5c6dd03633847bc2da025cff5214e28708ec"
+                    "signerS": "0x343b0b143924a5db42a3200ae72d5c6dd03633847bc2da025cff5214e28708ec",
                 }
             ],
             "accessList": (

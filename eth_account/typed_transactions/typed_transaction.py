@@ -118,7 +118,7 @@ class TypedTransaction:
             "AccessListTransaction",
             "BlobTransaction",
             "SetCodeTransaction",
-         ]
+        ]
 
         if encoded_transaction[0] == AccessListTransaction.transaction_type:
             transaction_type = AccessListTransaction.transaction_type
