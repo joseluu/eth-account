@@ -52,7 +52,6 @@ from eth_account._utils.validation import (
     LEGACY_TRANSACTION_FORMATTERS,
 )
 
-
 TYPED_TRANSACTION_FORMATTERS = merge(
     LEGACY_TRANSACTION_FORMATTERS,
     {

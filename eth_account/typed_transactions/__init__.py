@@ -7,9 +7,9 @@ from .blob_transactions.blob_transaction import (
 from .dynamic_fee_transaction import (
     DynamicFeeTransaction,
 )
-from .typed_transaction import (
-    TypedTransaction,
-)
 from .set_code_transaction import (
     SetCodeTransaction,
+)
+from .typed_transaction import (
+    TypedTransaction,
 )

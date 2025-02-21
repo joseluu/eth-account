@@ -27,10 +27,10 @@ from hexbytes import (
 import rlp
 from rlp.sedes import (
     Binary,
-    big_endian_int,
-    binary,
     CountableList,
     List as ListSedesClass,
+    big_endian_int,
+    binary,
 )
 
 from eth_account._utils.transaction_utils import (
@@ -43,7 +43,6 @@ from eth_account._utils.validation import (
     is_rpc_structured_access_list,
     is_rpc_structured_authorisation_list,
 )
-
 from eth_account.types import (
     Blobs,
 )
@@ -59,15 +58,16 @@ from .base import (
 authorisation_list_sede_type = CountableList(
     ListSedesClass(
         [
-            big_endian_int, # chainId
-            Binary.fixed_length(20, allow_empty=False), # codeSource address
-            big_endian_int, # nonce
-            big_endian_int, # yParity
-            big_endian_int, # signerR
-            big_endian_int  # signerS
+            big_endian_int,  # chainId
+            Binary.fixed_length(20, allow_empty=False),  # codeSource address
+            big_endian_int,  # nonce
+            big_endian_int,  # yParity
+            big_endian_int,  # signerR
+            big_endian_int,  # signerS
         ]
     ),
 )
+
 
 class AuthorizationRLP(HashableRLP):
     magic = 5  # '0x05' 'MAGIC' as per specification EIP-7702
@@ -76,6 +76,7 @@ class AuthorizationRLP(HashableRLP):
         ("address", Binary.fixed_length(20, allow_empty=False)),
         ("nonce", big_endian_int),
     )
+
     def hash(self) -> HexBytes:
         """
         :returns: the hash of the encoded bytestring
@@ -85,11 +86,11 @@ class AuthorizationRLP(HashableRLP):
             pipe(
                 self,
                 rlp.encode,
-                lambda val: bytes([self.__class__.magic])
-                + val,  # (0x05 || rlp([...]))
+                lambda val: bytes([self.__class__.magic]) + val,  # (0x05 || rlp([...]))
                 keccak,
             )
         )
+
 
 class SignedAutorizationRLP(HashableRLP):
     fields = (
@@ -100,6 +101,7 @@ class SignedAutorizationRLP(HashableRLP):
         ("signerR", big_endian_int),
         ("signerS", big_endian_int),
     )
+
 
 class SetCodeTransaction(_TypedTransactionImplementation):
     """
@@ -217,7 +219,6 @@ class SetCodeTransaction(_TypedTransactionImplementation):
         return cls(
             dictionary=sanitized_dictionary,
         )
-
 
     @classmethod
     def from_bytes(cls, encoded_transaction: HexBytes) -> "SetCodeTransaction":

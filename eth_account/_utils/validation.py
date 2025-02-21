@@ -101,6 +101,7 @@ def is_rlp_structured_access_list(val: Any) -> bool:
                 return False
     return True
 
+
 def is_rpc_structured_authorisation_list(val: Any) -> bool:
     """Returns true if 'val' is a valid JSON-RPC structured access list."""
     if not is_list_like(val):

@@ -40,7 +40,7 @@ chain_id = w3.eth.chain_id
 signer_nonce = w3.eth.get_transaction_count(signer_EOA_address)
 my_authorization = AuthorizationRLP(chain_id, bytes.fromhex(code_address[2:]) ,signer_nonce)
 authority_keys = keys.PrivateKey(decode_hex(signer_EOA_private_key))
-[v, r, s] = authority_keys.sign_msg_hash(my_authorization.hash()).vrs 
+[v, r, s] = authority_keys.sign_msg_hash(my_authorization.hash()).vrs
 my_authorization_signed_dict = my_authorization.as_dict().update({"yParity":v,"signerR":r,"signerS":s})
 my_authorization_signed = SignedAutorizationRLP(chain_id, bytes.fromhex(code_address[2:]),signer_nonce,v,r,s)
 my_authorization_signed.as_dict() # this is the signed authorization to be added to the transaction_dict

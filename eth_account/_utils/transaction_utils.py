@@ -10,14 +10,14 @@ from toolz import (
 
 from eth_account._utils.validation import (
     is_rlp_structured_access_list,
-    is_rpc_structured_access_list,
     is_rlp_structured_authorisation_list,
-    is_rpc_structured_authorisation_list
+    is_rpc_structured_access_list,
+    is_rpc_structured_authorisation_list,
 )
 from eth_account.types import (
     AccessList,
-    RLPStructuredAccessList,
     AuthorisationList,
+    RLPStructuredAccessList,
     RLPStructuredAuthorisationList,
     TransactionDictType,
 )
@@ -62,7 +62,7 @@ def set_transaction_type_if_needed(
                 transaction_dict = assoc(transaction_dict, "type", "0x3")
             elif "authorisationList" in transaction_dict:
                 # set code txn - type 4
-                transaction_dict = assoc(transaction_dict, "type", "0x4")                
+                transaction_dict = assoc(transaction_dict, "type", "0x4")
             else:
                 # dynamic fee txn - type 2
                 transaction_dict = assoc(transaction_dict, "type", "0x2")
@@ -110,6 +110,7 @@ def _access_list_rpc_to_rlp_structure(
         for d in access_list
     )
 
+
 def _authorisation_list_rpc_to_rlp_structure(
     authorisation_list: AuthorisationList,
 ) -> RLPStructuredAuthorisationList:
@@ -130,6 +131,7 @@ def _authorisation_list_rpc_to_rlp_structure(
         for d in authorisation_list
     )
 
+
 # rlp to JSON-RPC transaction structure
 def transaction_rlp_to_rpc_structure(dictionary: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -142,9 +144,15 @@ def transaction_rlp_to_rpc_structure(dictionary: Dict[str, Any]) -> Dict[str, An
         rpc_structured_access_list = _access_list_rlp_to_rpc_structure(access_list)
         dictionary = assoc(dictionary, "accessList", rpc_structured_access_list)
     if authorisation_list:
-        dictionary = dissoc(dictionary, "authorisationList")    # remove the access list from the dictionary
-        rpc_structured_authorisation_list = _authorisation_list_rlp_to_rpc_structure(authorisation_list)
-        dictionary = assoc(dictionary, "authorisationList", rpc_structured_authorisation_list)  # add the access list back to the dictionary
+        dictionary = dissoc(
+            dictionary, "authorisationList"
+        )  # remove the access list from the dictionary
+        rpc_structured_authorisation_list = _authorisation_list_rlp_to_rpc_structure(
+            authorisation_list
+        )
+        dictionary = assoc(
+            dictionary, "authorisationList", rpc_structured_authorisation_list
+        )  # add the access list back to the dictionary
     return dictionary
 
 
@@ -157,16 +165,23 @@ def _access_list_rlp_to_rpc_structure(
     # build a dictionary with appropriate keys for each tuple
     return tuple({"address": t[0], "storageKeys": t[1]} for t in access_list)
 
+
 def _authorisation_list_rlp_to_rpc_structure(
     authorisation_list: RLPStructuredAuthorisationList,
 ) -> AuthorisationList:
     if not is_rlp_structured_authorisation_list(authorisation_list):
-        raise ValueError("provided object not formatted as rlp-structured authorisation list")
+        raise ValueError(
+            "provided object not formatted as rlp-structured authorisation list"
+        )
     # build a dictionary with appropriate keys for each tuple
-    return tuple({  "chainId": t[0], 
-                    "address": t[1],
-                    "nonce": t[2],
-                    "yParity": t[3],
-                    "signerR": t[4],
-                    "signerS": t[5]
-                  } for t in authorisation_list)
+    return tuple(
+        {
+            "chainId": t[0],
+            "address": t[1],
+            "nonce": t[2],
+            "yParity": t[3],
+            "signerR": t[4],
+            "signerS": t[5],
+        }
+        for t in authorisation_list
+    )
