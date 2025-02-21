@@ -41,7 +41,7 @@ w3.eth.account.sign_authorization(
             'chainId': chain_id,
             'address': bytes.fromhex(code_address[2:]),
             'nonce': signer_nonce
-            }, 
+            },
             signer_EOA_private_key)
 
 ```
