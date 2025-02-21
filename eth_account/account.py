@@ -39,9 +39,6 @@ from eth_typing import (
     Hash32,
     HexStr,
 )
-from eth_utils import (
-    decode_hex,
-)
 from eth_utils.curried import (
     combomethod,
     hexstr_if_str,
@@ -1058,9 +1055,8 @@ class Account(AccountLocalActions):
         authorization_dict: AuthorizationDictType,
         private_key: PrivateKeyType,
     ) -> AuthorizationDictType:
-        """
+        r"""
         Sign an authorization  using a local private key.
-
         It adds the signature fields to the authorization dict.
 
         :param dict authorization_dict: the required keys are: chainId, address, nonce
@@ -1069,17 +1065,17 @@ class Account(AccountLocalActions):
         :returns: the dictionary with the signature fields added, suitable for inclusion in a EIP-7702 transaction
         :rtype: AuthorizationDictType
 
-        usage
+        usage:
         You need to get signed one or more signed authorizations from an EOA willing to have a smart contract code associated with the EOA, this the essence of EIP-7702
         an authorization is of this form:
-        ```json
+
         {'chainId': 7072151312,
         'address':  b'>l\x95\xd8\x80@\x1eN6\xeeb\xf4\xeb\xde\xd3F\xe1\xad\xf4-',
         'nonce': 2,
         'yParity': 1,
         'r': 22595136657293516951860802422974352017713294017347016159649668416801694741909,
         's': 23624588567578401597292901415360791985725988995245670164012927046435484403948}
-        ```
+
         where:
         - address is the address of the smart contract code to be associated with the EOA, the address format is bytes
         - nonce is the nonce of the EOA, it is used to prevent replay attacks
@@ -1090,34 +1086,30 @@ class Account(AccountLocalActions):
         transaction_dict = {'authorizationList':[my_auth1, my_auth2], "to": some_address}
 
 
-        ### signature of the authorization, example code using the convinience function:
-        ```python
-        #
-        # you need to have the EOA private key, the EOA address and the code address
-        # in variables named:
-        # signer_EOA_private_key
-        # code_address
-        # and an instanciated web3 object named w3
+        assuming you yave variables named:
+        signer_EOA_private_key
+        code_address
+        and an instanciated web3 object named w3
+
+        code to sign the authorization:
+
 
         chain_id = w3.eth.chain_id
         signer_nonce = w3.eth.get_transaction_count(signer_EOA_address)
-
         w3.eth.account.sign_authorization(
-                    {
-                    'chainId': chain_id,
+                    {'chainId': chain_id,
                     'address': bytes.fromhex(code_address[2:]),
-                    'nonce': signer_nonce
-                    }, 
+                    'nonce': signer_nonce },
                     signer_EOA_private_key)
 
-        ```
+
         """  # noqa: E501
         if not isinstance(authorization_dict, Mapping):
             raise TypeError(
                 f"authorization_dict must be dict-like, got {repr(authorization_dict)}"
             )
 
-        authority_keys = keys.PrivateKey(decode_hex(private_key))
+        authority_key = self._parse_private_key(private_key)
 
         authorization_dict = dict(
             authorization_dict
@@ -1128,7 +1120,7 @@ class Account(AccountLocalActions):
         nonce = authorization_dict["nonce"]
         code_address = authorization_dict["address"]
         unsigned_authorization = AuthorizationRLP(chain_id, code_address, nonce)
-        [v, r, s] = authority_keys.sign_msg_hash(unsigned_authorization.hash()).vrs
+        [v, r, s] = authority_key.sign_msg_hash(unsigned_authorization.hash()).vrs
         signed_authorization = SignedAuthorizationRLP(
             chain_id, code_address, nonce, v, r, s
         )
