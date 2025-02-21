@@ -34,7 +34,7 @@ Blob Transaction
    :show-inheritance:
 
 SetCode Transaction
-----------------
+-------------------
 
 .. automodule:: eth_account.typed_transactions.set_code_transaction
    :members:
