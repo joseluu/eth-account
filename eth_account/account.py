@@ -1065,7 +1065,7 @@ class Account(AccountLocalActions):
         :returns: the dictionary with the signature fields added, suitable for inclusion in a EIP-7702 transaction
         :rtype: dict
 
-        .. doctest:: python
+        .. NOTE::
 
         You need to get signed one or more signed authorizations from an EOA willing to have a smart contract code associated with the EOA, this the essence of EIP-7702
 
@@ -1077,6 +1077,7 @@ class Account(AccountLocalActions):
 
         to create a transaction that associates the code with the EOA, you need to create a transaction with the authorizationList field, this field is a list of signed authorizations, one for each EOA willing to have the code associated with its address
 
+        ::
 
             >>> from web3 import Web3, EthereumTesterProvider
             >>> from eth_account import Account
