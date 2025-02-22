@@ -1079,22 +1079,27 @@ class Account(AccountLocalActions):
 
         ::
 
-            >>> from web3 import Web3, EthereumTesterProvider
-            >>> from eth_account import Account
-            >>> from eth_tester import EthereumTester, MockBackend
-            >>> w3 = Web3(EthereumTesterProvider())
-            >>> code_address = '0x5ce9454909639D2D17A3F753ce7d93fa0b9aB12E'
-            >>> signer_EOA_private_key = "0xb25c7db31feed9122727bf0939dc769a96564b2de4c4726d035b36ecf1e5b364"
-            >>> signer_EOA_address = Account.from_key(signer_EOA_private_key).address
-            >>> nonce = w3.eth.get_transaction_count(code_address)
-            >>> authorization_to_sign = {'chainId': 7072151312,
-            ...                         'address':  bytes.fromhex(code_address[2:]),
-            ...                                                 'nonce': nonce}
-            >>> my_auth1 = Account.sign_authorization(authorization_to_sign, signer_EOA_private_key)
-            >>> my_auth1
-            {'chainId': 7072151312, 'address': b'\\\xe9EI\tc\x9d-\x17\xa3\xf7S\xce}\x93\xfa\x0b\x9a\xb1.', 'nonce': 0, 'yParity': 0, 'r': 100888818593976975127029069136432183996023174646240393744022637628800244730652, 's': 17383471040173889700247006932658923008999125929610946821971349508861021723564}
-            >>> some_address = "0x0000000000000000000000000000000000000042"
-            >>> transaction_dict = {'authorizationList':[my_auth1], "to": some_address}
+            # from web3 import Web3, EthereumTesterProvider
+            # from eth_account import Account
+            # from eth_tester import EthereumTester, MockBackend
+            # w3 = Web3(EthereumTesterProvider())
+            # code_address = '0x5ce9454909639D2D17A3F753ce7d93fa0b9aB12E'
+            # signer_EOA_private_key = "0xb25c7db31feed9122727bf0939dc769a96564b2de4c4726d035b36ecf1e5b364"
+            # signer_EOA_address = Account.from_key(signer_EOA_private_key).address
+            # nonce = w3.eth.get_transaction_count(code_address)
+            # authorization_to_sign = {'chainId': 7072151312,
+            #                          'address':  bytes.fromhex(code_address[2:]),
+            # 'nonce': nonce}
+            # my_auth1 = Account.sign_authorization(authorization_to_sign, signer_EOA_private_key)
+            # my_auth1
+            # {'chainId': 7072151312,
+            #  'address': b'\\\xe9EI\tc\x9d-\x17\xa3\xf7S\xce}\x93\xfa\x0b\x9a\xb1.',
+            #  'nonce': 0,
+            #  'yParity': 0,
+            #  'r': 100888818593976975127029069136432183996023174646240393744022637628800244730652,
+            #  's': 17383471040173889700247006932658923008999125929610946821971349508861021723564}
+            # some_address = "0x0000000000000000000000000000000000000042"
+            # transaction_dict = {'authorizationList':[my_auth1], "to": some_address}
 
         .. _EIP-7702: https://eips.ethereum.org/EIPS/eip-7702
         """  # noqa: E501
