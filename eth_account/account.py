@@ -1063,7 +1063,9 @@ class Account(AccountLocalActions):
         :param private_key: the private key to sign the data with
         :type private_key: hex str, bytes, int or :class:`eth_keys.datatypes.PrivateKey`
         :returns: the dictionary with the signature fields added, suitable for inclusion in a EIP-7702 transaction
-        :rtype: AuthorizationDictType
+        :rtype: dict
+
+        .. doctest:: python
 
         You need to get signed one or more signed authorizations from an EOA willing to have a smart contract code associated with the EOA, this the essence of EIP-7702
 
@@ -1073,11 +1075,8 @@ class Account(AccountLocalActions):
         - nonce is the nonce of the EOA, it is used to prevent replay attacks
         once signed, the fields are the signature of the first 3 fields by the EOA
 
-        to create a transaction that associates the code with the EOA, you need to create a transaction with the authorizationList field, this field is a list of signed authorizations, one for each EOA willing to have the code associated with it
+        to create a transaction that associates the code with the EOA, you need to create a transaction with the authorizationList field, this field is a list of signed authorizations, one for each EOA willing to have the code associated with its address
 
-
-
-        .. doctest:: python
 
             >>> from web3 import Web3, EthereumTesterProvider
             >>> from eth_account import Account
@@ -1102,8 +1101,9 @@ class Account(AccountLocalActions):
             >>> some_address = "0x0000000000000000000000000000000000000042"
             >>> transaction_dict = {'authorizationList':[my_auth1], "to": some_address}
 
-        .. _EIP-7702: https://eips.ethereum.org/EIPS/eip-7702
 
+
+        .. _EIP-7702: https://eips.ethereum.org/EIPS/eip-7702
         """  # noqa: E501
         if not isinstance(authorization_dict, Mapping):
             raise TypeError(
