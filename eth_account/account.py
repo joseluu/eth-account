@@ -1066,9 +1066,22 @@ class Account(AccountLocalActions):
         :rtype: AuthorizationDictType
 
         You need to get signed one or more signed authorizations from an EOA willing to have a smart contract code associated with the EOA, this the essence of EIP-7702
-        an authorization is of this form:
+
+        in the code below in the variable authorization_to_sign:
+        - chainId is the chain id of the chain where the EOA is located or 0 if the authorization is for all chains
+        - address is the address of the smart contract code to be associated with the EOA, the address format is bytes
+        - nonce is the nonce of the EOA, it is used to prevent replay attacks
+        once signed, the fields are the signature of the first 3 fields by the EOA
+
+        to create a transaction that associates the code with the EOA, you need to create a transaction with the authorizationList field, this field is a list of signed authorizations, one for each EOA willing to have the code associated with it
+
+
 
         .. doctest:: python
+
+            >>> from web3 import Web3, EthereumTesterProvider
+            >>> from eth_account import Account
+            >>> w3 = Web3(EthereumTesterProvider())
 
             >>> code_address = '0x5ce9454909639D2D17A3F753ce7d93fa0b9aB12E'
             >>> signer_EOA_private_key = "0xb25c7db31feed9122727bf0939dc769a96564b2de4c4726d035b36ecf1e5b364"
@@ -1086,21 +1099,11 @@ class Account(AccountLocalActions):
              'r': 100888818593976975127029069136432183996023174646240393744022637628800244730652,
              's': 17383471040173889700247006932658923008999125929610946821971349508861021723564}
 
+            >>> some_address = "0x0000000000000000000000000000000000000042"
+            >>> transaction_dict = {'authorizationList':[my_auth1], "to": some_address}
+
         .. _EIP-7702: https://eips.ethereum.org/EIPS/eip-7702
 
-        in the variable authorization_to_sign:
-        - chainId is the chain id of the chain where the EOA is located or 0 if the authorization is for all chains
-        - address is the address of the smart contract code to be associated with the EOA, the address format is bytes
-        - nonce is the nonce of the EOA, it is used to prevent replay attacks
-        once signed, the fields are the signature of the first 3 fields by the EOA
-
-        to create a transaction that associates the code with the EOA, you need to create a transaction with the authorizationList field, this field is a list of signed authorizations, one for each EOA willing to have the code associated with it
-
-        .. doctest:: python
-
-            >>> transaction_dict = {'authorizationList':[my_auth1, my_auth2], "to": some_address}
-
-        ..
         """  # noqa: E501
         if not isinstance(authorization_dict, Mapping):
             raise TypeError(
