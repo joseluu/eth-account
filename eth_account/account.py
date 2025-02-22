@@ -1066,16 +1066,15 @@ class Account(AccountLocalActions):
         :rtype: dict
 
         .. NOTE::
+            You need to get signed one or more signed authorizations from an EOA willing to have a smart contract code associated with the EOA, this the essence of EIP-7702
 
-        You need to get signed one or more signed authorizations from an EOA willing to have a smart contract code associated with the EOA, this the essence of EIP-7702
+            in the code below in the variable authorization_to_sign:
+            - chainId is the chain id of the chain where the EOA is located or 0 if the authorization is for all chains
+            - address is the address of the smart contract code to be associated with the EOA, the address format is bytes
+            - nonce is the nonce of the EOA, it is used to prevent replay attacks
+            once signed, the fields are the signature of the first 3 fields by the EOA
 
-        in the code below in the variable authorization_to_sign:
-        - chainId is the chain id of the chain where the EOA is located or 0 if the authorization is for all chains
-        - address is the address of the smart contract code to be associated with the EOA, the address format is bytes
-        - nonce is the nonce of the EOA, it is used to prevent replay attacks
-        once signed, the fields are the signature of the first 3 fields by the EOA
-
-        to create a transaction that associates the code with the EOA, you need to create a transaction with the authorizationList field, this field is a list of signed authorizations, one for each EOA willing to have the code associated with its address
+            to create a transaction that associates the code with the EOA, you need to create a transaction with the authorizationList field, this field is a list of signed authorizations, one for each EOA willing to have the code associated with its address
 
         ::
 
