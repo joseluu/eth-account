@@ -22,6 +22,10 @@
 #
 import pytest
 
+from eth_account.hdaccount._utils import (
+    normalize_nfc,
+    normalize_nfd,
+)
 from eth_account.hdaccount.mnemonic import (
     Language,
     Mnemonic,
@@ -105,9 +109,9 @@ def test_expand(lang):
     words = m.generate()
     for word in words.split(" "):  # Space delinates in languages not excluded above
         # BIP39 can support word expansion with as little as 4 characters
-        norm_word = normalize_string(word)
+        norm_word = normalize_nfc(word)
         for size in range(4, len(norm_word)):
-            assert m.expand(norm_word[: size + 1]) == word
+            assert m.expand(normalize_nfd(norm_word[: size + 1])) == word
 
 
 @pytest.mark.parametrize("lang", Mnemonic.list_languages_enum())

@@ -32,6 +32,28 @@ def normalize_string(txt: Union[str, bytes]) -> str:
     return unicodedata.normalize("NFKD", utxt)
 
 
+def normalize_nfc(txt: Union[str, bytes]) -> str:
+    if isinstance(txt, bytes):
+        utxt = txt.decode("utf8")
+    elif isinstance(txt, str):
+        utxt = txt
+    else:
+        raise ValidationError("String value expected")
+
+    return unicodedata.normalize("NFC", utxt)
+
+
+def normalize_nfd(txt: Union[str, bytes]) -> str:
+    if isinstance(txt, bytes):
+        utxt = txt.decode("utf8")
+    elif isinstance(txt, str):
+        utxt = txt
+    else:
+        raise ValidationError("String value expected")
+
+    return unicodedata.normalize("NFD", utxt)
+
+
 def sha256(data: bytes) -> bytes:
     return hashlib.sha256(data).digest()
 
