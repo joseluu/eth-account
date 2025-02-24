@@ -143,7 +143,7 @@ def test_generation_with_string(lang, num_words):
     # NOTE: Sometimes traditional chinese can return characters that are also
     # valid simplified chinese characters. In that scenario, the detection
     # algorithm will assume simplified.
-    if lang == "chinese_simplified":
+    if lang == "chinese_traditional":
         assert "chinese" in Mnemonic.detect_language(mnemonic).value
     else:
         assert Mnemonic.detect_language(mnemonic) == Language(lang)
