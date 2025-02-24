@@ -114,7 +114,7 @@ def test_expand(lang):
         for size in range(4, len(norm_word)):
             # words from the list have been normalized in decomposed form (NFKD)
             # they should be compared in decomposed form as well
-            assert m.expand(unicode_decompose_string(norm_word[: size + 1])) == word
+            assert m.expand(unicode_decompose_string(norm_word[:size])) == word
 
 
 @pytest.mark.parametrize("lang", Mnemonic.list_languages_enum())
