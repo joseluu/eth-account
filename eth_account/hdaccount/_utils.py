@@ -21,7 +21,7 @@ SECP256K1_N = int(
 )
 
 
-def normalize_string(txt: Union[str, bytes]) -> str:
+def unicode_decompose_string(txt: Union[str, bytes]) -> str:
     if isinstance(txt, bytes):
         utxt = txt.decode("utf8")
     elif isinstance(txt, str):
@@ -32,7 +32,7 @@ def normalize_string(txt: Union[str, bytes]) -> str:
     return unicodedata.normalize("NFKD", utxt)
 
 
-def normalize_nfc(txt: Union[str, bytes]) -> str:
+def unicode_compose_string(txt: Union[str, bytes]) -> str:
     if isinstance(txt, bytes):
         utxt = txt.decode("utf8")
     elif isinstance(txt, str):
@@ -40,18 +40,7 @@ def normalize_nfc(txt: Union[str, bytes]) -> str:
     else:
         raise ValidationError("String value expected")
 
-    return unicodedata.normalize("NFC", utxt)
-
-
-def normalize_nfd(txt: Union[str, bytes]) -> str:
-    if isinstance(txt, bytes):
-        utxt = txt.decode("utf8")
-    elif isinstance(txt, str):
-        utxt = txt
-    else:
-        raise ValidationError("String value expected")
-
-    return unicodedata.normalize("NFD", utxt)
+    return unicodedata.normalize("NFKC", utxt)
 
 
 def sha256(data: bytes) -> bytes:
