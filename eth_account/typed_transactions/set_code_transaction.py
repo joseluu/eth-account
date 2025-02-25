@@ -278,7 +278,10 @@ class SetCodeTransaction(_TypedTransactionImplementation):
         Here, the transaction payload is:
 
             TransactionPayload = rlp([chainId,
-            nonce, gasPrice, gasLimit, to, value, data, accessList,
+            nonce, maxPriorityFeePerGas, maxFeePerGas, gasLimit,
+            to, value, data,
+            accessList,
+            authorizationsList,
             signatureYParity, signatureR, signatureS])
         """
         if not all(k in self.dictionary for k in "vrs"):
